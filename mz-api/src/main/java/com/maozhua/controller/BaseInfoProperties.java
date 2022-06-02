@@ -26,23 +26,4 @@ public class BaseInfoProperties {
     @Resource
     public RedisOperator redisOperator;
 
-    /**
-     * 获取数据校验的错误信息
-     *
-     * @param bindingResult BindingResult
-     * @return 数据校验的错误信息
-     */
-    public Map<String, String> getErrors(BindingResult bindingResult) {
-        Map<String, String> map = new HashMap<>();
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        for (FieldError error : fieldErrors) {
-            // 错误所对应的属性字段名
-            String field = error.getField();
-            // 错误提示
-            String msg = error.getDefaultMessage();
-            map.put(field, msg);
-        }
-
-        return map;
-    }
 }

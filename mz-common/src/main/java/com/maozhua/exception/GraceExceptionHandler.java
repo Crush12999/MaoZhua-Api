@@ -33,6 +33,7 @@ public class GraceExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public GraceJsonResult returnMethodArgumentNotValid(MethodArgumentNotValidException e) {
+        // 判断 BindingResult 是否保存了错误的验证信息，如果有，需要返回给前端
         BindingResult result = e.getBindingResult();
         Map<String, String> map = getErrors(result);
         return GraceJsonResult.errorMap(map);
@@ -44,14 +45,20 @@ public class GraceExceptionHandler {
         return GraceJsonResult.errorCustom(ResponseStatusEnum.FILE_MAX_SIZE_2MB_ERROR);
     }
 
-    public Map<String, String> getErrors(BindingResult result) {
+    /**
+     * 获取数据校验的错误信息
+     *
+     * @param bindingResult BindingResult
+     * @return 数据校验的错误信息
+     */
+    public Map<String, String> getErrors(BindingResult bindingResult) {
         Map<String, String> map = new HashMap<>();
-        List<FieldError> errorList = result.getFieldErrors();
-        for (FieldError ff : errorList) {
+        List<FieldError> errorList = bindingResult.getFieldErrors();
+        for (FieldError error : errorList) {
             // 错误所对应的属性字段名
-            String field = ff.getField();
+            String field = error.getField();
             // 错误的信息
-            String msg = ff.getDefaultMessage();
+            String msg = error.getDefaultMessage();
             map.put(field, msg);
         }
         return map;

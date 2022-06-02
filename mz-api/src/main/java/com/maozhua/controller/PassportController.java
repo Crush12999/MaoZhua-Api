@@ -3,11 +3,15 @@ package com.maozhua.controller;
 import com.maozhua.bo.RegisterLoginBO;
 import com.maozhua.grace.result.GraceJsonResult;
 import com.maozhua.grace.result.ResponseStatusEnum;
+import com.maozhua.pojo.Users;
+import com.maozhua.service.UserService;
 import com.maozhua.utils.IpUtil;
 import com.maozhua.utils.SmsUtil;
+import com.maozhua.vo.UserVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +22,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author sryzzz
@@ -32,6 +37,9 @@ public class PassportController extends BaseInfoProperties {
 
     @Resource
     private SmsUtil smsUtil;
+
+    @Resource
+    private UserService userService;
 
     @PostMapping("getSmsCode")
     public GraceJsonResult sendSms(@RequestParam String mobile,
@@ -58,13 +66,36 @@ public class PassportController extends BaseInfoProperties {
 
     @PostMapping("login")
     public GraceJsonResult login(@Valid @RequestBody RegisterLoginBO registerLoginBO,
-                                 BindingResult bindingResult,
                                  HttpServletRequest request) throws Exception {
-        // 判断 BindingResult 是否保存了错误的验证信息，如果有，需要返回给前端
-        if (bindingResult.hasErrors()) {
-            Map<String, String> map = getErrors(bindingResult);
-            return GraceJsonResult.errorMap(map);
+
+        String mobile = registerLoginBO.getMobile();
+        String code = registerLoginBO.getVerifyCode();
+
+        // 从 redis 中获取验证码与前端信息校验
+        String redisCode = redisOperator.get(MOBILE_SMS_CODE + ":" + mobile);
+        if (StringUtils.isBlank(redisCode) || !redisCode.equalsIgnoreCase(code)) {
+            return GraceJsonResult.errorCustom(ResponseStatusEnum.SMS_CODE_ERROR);
         }
-        return GraceJsonResult.ok();
+
+        // 查询数据库，判断用户是否存在
+        Users user = userService.queryMobileIsExist(mobile);
+        if (user == null) {
+            // 没注册过就注册
+            user = userService.createUser(mobile);
+        }
+
+        // 保存用户信息和会话信息到 Redis
+        String uToken = UUID.randomUUID().toString();
+        redisOperator.set(REDIS_USER_TOKEN + ":" + user.getId(), uToken);
+
+        // 用户登录注册成功以后，删除Redis中的验证码
+        redisOperator.del(MOBILE_SMS_CODE + ":" + mobile);
+
+        // 返回用户信息，包含token令牌
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        userVO.setUserToken(uToken);
+
+        return GraceJsonResult.ok(userVO);
     }
 }
