@@ -29,6 +29,13 @@ spring:
       max-lifetime: 18000000                # 连接池的最大生命时长（毫秒），超时则会被释放（retired）
       connection-test-query: SELECT 1
 
+  # Redis
+  redis:
+    host: 192.168.131.62
+    port: 6379
+    database: 0
+    password: 123456
+
 # mybatis
 mybatis:
   type-aliases-package: com.maozhua.pojo
