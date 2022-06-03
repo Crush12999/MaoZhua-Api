@@ -74,4 +74,16 @@ public class UserVO {
 
     @ApiModelProperty(value = "用户登录令牌")
     private String userToken;
+
+    @ApiModelProperty(value = "我的关注总数")
+    private Integer myFollowsCounts;
+
+    @ApiModelProperty(value = "我的粉丝总数")
+    private Integer myFansCounts;
+
+    // @ApiModelProperty(value = "喜欢我的视频总数")
+    // private Integer myLikedVlogCounts;
+
+    @ApiModelProperty(value = "喜欢我的总数")
+    private Integer totalLikeMeCounts;
 }

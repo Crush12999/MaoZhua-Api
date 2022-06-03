@@ -24,4 +24,13 @@ public interface UserService {
      * @return 用户
      */
     Users createUser(String mobile);
+
+    /**
+     * 根据用户ID获取用户信息，返回用户信息对象
+     *
+     * @param userId 用户ID
+     * @return 用户
+     */
+    Users getUserById(String userId);
+
 }

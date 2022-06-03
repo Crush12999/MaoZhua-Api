@@ -84,4 +84,12 @@ public class UserServiceImpl implements UserService {
 
         return user;
     }
+
+    /**
+     * 根据用户ID获取用户信息，返回用户信息对象
+     */
+    @Override
+    public Users getUserById(String userId) {
+        return usersMapper.selectByPrimaryKey(userId);
+    }
 }
