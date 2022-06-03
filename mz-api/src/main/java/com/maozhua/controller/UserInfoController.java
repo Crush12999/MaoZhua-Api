@@ -1,5 +1,7 @@
 package com.maozhua.controller;
 
+import com.maozhua.bo.UpdatedUserBO;
+import com.maozhua.enums.UserInfoModifyType;
 import com.maozhua.grace.result.GraceJsonResult;
 import com.maozhua.pojo.Users;
 import com.maozhua.service.UserService;
@@ -70,5 +72,18 @@ public class UserInfoController extends BaseInfoProperties {
 
         return GraceJsonResult.ok(userVO);
     }
+
+    @ApiOperation(value = "修改用户信息")
+    @PostMapping("modifyUserInfo")
+    public GraceJsonResult modifyUserInfo(@RequestBody UpdatedUserBO updatedUserBO,
+                                          @RequestParam Integer type) {
+
+        UserInfoModifyType.checkUserInfoTypeIsRight(type);
+
+        Users newUserInfo = userService.updateUserInfo(updatedUserBO, type);
+
+        return GraceJsonResult.ok(newUserInfo);
+    }
+
 
 }

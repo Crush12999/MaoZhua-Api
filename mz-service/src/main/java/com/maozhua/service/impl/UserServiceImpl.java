@@ -1,13 +1,18 @@
 package com.maozhua.service.impl;
 
+import com.maozhua.bo.UpdatedUserBO;
 import com.maozhua.enums.Sex;
+import com.maozhua.enums.UserInfoModifyType;
 import com.maozhua.enums.YesOrNo;
+import com.maozhua.exception.GraceException;
+import com.maozhua.grace.result.ResponseStatusEnum;
 import com.maozhua.mapper.UsersMapper;
 import com.maozhua.pojo.Users;
 import com.maozhua.service.UserService;
 import com.maozhua.utils.DateUtil;
 import com.maozhua.utils.DesensitizationUtil;
 import org.n3r.idworker.Sid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -91,5 +96,55 @@ public class UserServiceImpl implements UserService {
     @Override
     public Users getUserById(String userId) {
         return usersMapper.selectByPrimaryKey(userId);
+    }
+
+    /**
+     * 修改用户信息
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Users updateUserInfo(UpdatedUserBO updatedUserBO) {
+        Users oldUser = new Users();
+        BeanUtils.copyProperties(updatedUserBO, oldUser);
+        // 只修改不为空的属性
+        int row = usersMapper.updateByPrimaryKeySelective(oldUser);
+        if (row != 1) {
+            GraceException.display(ResponseStatusEnum.USER_UPDATE_ERROR);
+        }
+        return getUserById(updatedUserBO.getId());
+    }
+
+    /**
+     * 修改用户信息
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Users updateUserInfo(UpdatedUserBO updatedUserBO, Integer type) {
+        if (type.equals(UserInfoModifyType.NICKNAME.type)) {
+            Example example = new Example(Users.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("nickname", updatedUserBO.getNickname());
+            Users user = usersMapper.selectOneByExample(example);
+            if (user != null) {
+                GraceException.display(ResponseStatusEnum.USER_INFO_UPDATED_NICKNAME_EXIST_ERROR);
+            }
+        }
+        if (type.equals(UserInfoModifyType.MAOZHUANUM.type)) {
+            Example example = new Example(Users.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("maozhuaNum", updatedUserBO.getMaozhuaNum());
+            Users user = usersMapper.selectOneByExample(example);
+            if (user != null) {
+                GraceException.display(ResponseStatusEnum.USER_INFO_UPDATED_MAOZHUANUM_EXIST_ERROR);
+            }
+
+            Users tempUser = getUserById(updatedUserBO.getId());
+            if (tempUser.getCanMaozhuaNumBeUpdated().equals(YesOrNo.NO.type)) {
+                GraceException.display(ResponseStatusEnum.USER_INFO_CANT_UPDATED_MAOZHUANUM_ERROR);
+            }
+
+            updatedUserBO.setCanMaozhuaNumBeUpdated(YesOrNo.NO.type);
+        }
+        return updateUserInfo(updatedUserBO);
     }
 }

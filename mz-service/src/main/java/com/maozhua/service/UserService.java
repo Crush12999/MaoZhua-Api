@@ -1,5 +1,6 @@
 package com.maozhua.service;
 
+import com.maozhua.bo.UpdatedUserBO;
 import com.maozhua.pojo.Users;
 
 /**
@@ -32,5 +33,18 @@ public interface UserService {
      * @return 用户
      */
     Users getUserById(String userId);
+
+    /**
+     * 修改用户信息
+     *
+     * @param updatedUserBO 要修改的用户信息
+     * @return 用户信息
+     */
+    Users updateUserInfo(UpdatedUserBO updatedUserBO);
+
+    /**
+     * 修改用户信息
+     */
+    Users updateUserInfo(UpdatedUserBO updatedUserBO, Integer type);
 
 }
