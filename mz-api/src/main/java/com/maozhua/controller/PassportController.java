@@ -98,4 +98,20 @@ public class PassportController extends BaseInfoProperties {
 
         return GraceJsonResult.ok(userVO);
     }
+
+    /**
+     * 退出登录
+     */
+    @PostMapping("logout")
+    public GraceJsonResult logout(@RequestParam String userId,
+                                   HttpServletRequest request) throws Exception {
+
+        if (StringUtils.isBlank(userId)) {
+            return GraceJsonResult.ok();
+        }
+
+        redisOperator.del(REDIS_USER_TOKEN + ":" + userId);
+
+        return GraceJsonResult.ok();
+    }
 }
