@@ -23,4 +23,13 @@ public interface FansService {
      */
     void doCancel(String myId, String vlogerId);
 
+    /**
+     * 查询用户是否关注博主
+     *
+     * @param myId     我的ID
+     * @param vlogerId 视频博主ID
+     * @return 是否关注博主
+     */
+    Boolean queryDoMeFollowVloger(String myId, String vlogerId);
+
 }

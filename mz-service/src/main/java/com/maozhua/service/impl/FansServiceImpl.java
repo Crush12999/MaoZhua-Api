@@ -5,6 +5,7 @@ import com.maozhua.enums.YesOrNo;
 import com.maozhua.mapper.FansMapper;
 import com.maozhua.pojo.Fans;
 import com.maozhua.service.FansService;
+import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,9 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
 
     @Resource
     private Sid sid;
+
+    private final static String ZERO = "0";
+    private final static String ONE = "1";
 
     /**
      * 关注
@@ -58,7 +62,7 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         redisOperator.increment(REDIS_MY_FANS_COUNTS + ":" + vlogerId, 1);
 
         // 我和博主的关联关系，依赖Redis，不要存储数据库
-        redisOperator.set(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId, "1");
+        redisOperator.set(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId, ONE);
 
     }
 
@@ -84,11 +88,36 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         fansMapper.delete(fan);
 
         // 博主的粉丝 - 1，我的关注 - 1。
-        redisOperator.decrement(REDIS_MY_FOLLOWS_COUNTS + ":" + myId, 1);
-        redisOperator.decrement(REDIS_MY_FANS_COUNTS + ":" + vlogerId, 1);
+        if (!ZERO.equals(redisOperator.get(REDIS_MY_FANS_COUNTS + ":" + vlogerId))) {
+            redisOperator.decrement(REDIS_MY_FOLLOWS_COUNTS + ":" + myId, 1);
+        }
+
+        if (!ZERO.equals(redisOperator.get(REDIS_MY_FANS_COUNTS + ":" + vlogerId))) {
+            redisOperator.decrement(REDIS_MY_FANS_COUNTS + ":" + vlogerId, 1);
+        }
 
         // 我和博主的关联关系，依赖Redis，不要存储数据库
         redisOperator.del(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId);
+    }
+
+    /**
+     * 查询用户是否关注博主
+     *
+     * @param myId     我的ID
+     * @param vlogerId 视频博主ID
+     * @return 是否关注博主
+     */
+    @Override
+    public Boolean queryDoMeFollowVloger(String myId, String vlogerId) {
+        if (redisOperator.keyIsExist(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId)) {
+            return true;
+        }
+        Fans fan = queryFansRelationship(myId, vlogerId);
+        if (fan != null) {
+            redisOperator.set(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId, ONE);
+            return true;
+        }
+        return false;
     }
 
     public Fans queryFansRelationship(String fanId, String vlogerId) {

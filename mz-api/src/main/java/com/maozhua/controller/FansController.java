@@ -9,10 +9,7 @@ import com.maozhua.service.UserService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -66,5 +63,11 @@ public class FansController extends BaseInfoProperties {
         fansService.doCancel(myId, vlogerId);
 
         return GraceJsonResult.ok();
+    }
+
+    @GetMapping("queryDoIFollowVloger")
+    public GraceJsonResult queryDoMeFollowVloger(@RequestParam String myId,
+                                  @RequestParam String vlogerId) {
+        return GraceJsonResult.ok(fansService.queryDoMeFollowVloger(myId, vlogerId));
     }
 }
