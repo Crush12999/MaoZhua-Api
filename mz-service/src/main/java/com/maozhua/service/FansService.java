@@ -15,4 +15,12 @@ public interface FansService {
      */
     void doFollow(String myId, String vlogerId);
 
+    /**
+     * 取关
+     *
+     * @param myId     我的ID
+     * @param vlogerId 视频博主ID
+     */
+    void doCancel(String myId, String vlogerId);
+
 }
