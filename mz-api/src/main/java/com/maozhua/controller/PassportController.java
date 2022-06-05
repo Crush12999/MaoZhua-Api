@@ -1,5 +1,6 @@
 package com.maozhua.controller;
 
+import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.bo.RegisterLoginBO;
 import com.maozhua.grace.result.GraceJsonResult;
 import com.maozhua.grace.result.ResponseStatusEnum;
@@ -12,16 +13,11 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**

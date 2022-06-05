@@ -1,13 +1,11 @@
-package com.maozhua.controller;
+package com.maozhua.base;
 
+import com.github.pagehelper.PageInfo;
+import com.maozhua.utils.PagedGridResult;
 import com.maozhua.utils.RedisOperator;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author sryzzz
@@ -15,6 +13,16 @@ import java.util.Map;
  * @description 公共接口
  */
 public class BaseInfoProperties {
+
+    /**
+     * 开始分页的页码数
+     */
+    public static final Integer COMMON_START_PAGE = 1;
+
+    /**
+     * 每页显示 10 条
+     */
+    public static final Integer COMMON_PAGE_SIZE = 10;
 
     /**
      * Redis验证码key
@@ -40,5 +48,15 @@ public class BaseInfoProperties {
 
     @Resource
     public RedisOperator redisOperator;
+
+    public PagedGridResult setterPagedGrid(List<?> list, Integer page) {
+        PageInfo<?> pageList = new PageInfo<>(list);
+        PagedGridResult gridResult = new PagedGridResult();
+        gridResult.setRows(list);
+        gridResult.setPage(page);
+        gridResult.setRecords(pageList.getTotal());
+        gridResult.setTotal(pageList.getPages());
+        return gridResult;
+    }
 
 }

@@ -1,14 +1,13 @@
 package com.maozhua.controller;
 
+import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.bo.VlogBO;
 import com.maozhua.grace.result.GraceJsonResult;
 import com.maozhua.service.VlogService;
+import com.maozhua.utils.PagedGridResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -20,7 +19,7 @@ import javax.annotation.Resource;
 @Api(tags = "VlogController => 短视频接口层")
 @RestController
 @RequestMapping("vlog")
-public class VlogController {
+public class VlogController extends BaseInfoProperties {
 
     @Resource
     private VlogService vlogService;
@@ -37,5 +36,20 @@ public class VlogController {
     public GraceJsonResult publish(@RequestBody VlogBO vlogBO) {
         vlogService.createVlog(vlogBO);
         return GraceJsonResult.ok();
+    }
+
+    /**
+     * 获取首页/搜索的视频列表
+     *
+     * @return 视频列表
+     */
+    @ApiOperation(value = "获取首页/搜索的视频列表")
+    @GetMapping("indexList")
+    public GraceJsonResult indexList(@RequestParam(defaultValue = "") String search,
+                                     @RequestParam(defaultValue = "1") Integer page,
+                                     @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        PagedGridResult gridResult = vlogService.listIndexVlogs(search, page, pageSize);
+        return GraceJsonResult.ok(gridResult);
     }
 }

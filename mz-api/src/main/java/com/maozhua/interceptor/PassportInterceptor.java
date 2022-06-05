@@ -1,12 +1,11 @@
 package com.maozhua.interceptor;
 
-import com.maozhua.controller.BaseInfoProperties;
+import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.exception.GraceException;
 import com.maozhua.grace.result.ResponseStatusEnum;
 import com.maozhua.utils.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

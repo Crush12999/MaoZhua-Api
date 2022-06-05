@@ -1,6 +1,7 @@
 package com.maozhua.service;
 
 import com.maozhua.bo.VlogBO;
+import com.maozhua.utils.PagedGridResult;
 
 /**
  * @author sryzzz
@@ -15,5 +16,15 @@ public interface VlogService {
      * @param vlogBO 视频对象
      */
     void createVlog(VlogBO vlogBO);
+
+    /**
+     * 获取首页/搜索的视频列表
+     *
+     * @param search   视频标题
+     * @param page     第几页
+     * @param pageSize 每页显示多少条视频
+     * @return 视频列表
+     */
+    PagedGridResult listIndexVlogs(String search, Integer page, Integer pageSize);
 
 }

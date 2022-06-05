@@ -1,5 +1,6 @@
 package com.maozhua.controller;
 
+import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.bo.UpdatedUserBO;
 import com.maozhua.config.MinIoConfig;
 import com.maozhua.enums.FileTypeEnum;
