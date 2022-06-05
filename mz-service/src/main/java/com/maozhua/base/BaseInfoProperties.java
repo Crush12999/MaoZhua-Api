@@ -41,6 +41,11 @@ public class BaseInfoProperties {
     public static final String REDIS_MY_FANS_COUNTS = "redis_my_fans_counts";
 
     /**
+     * 博主和粉丝的关联关系，用于判断他们是否互粉
+     */
+    public static final String REDIS_FANS_AND_VLOGGER_RELATIONSHIP = "redis_fans_and_vlogger_relationship";
+
+    /**
      * 视频和发布者获赞数
      */
     public static final String REDIS_VLOG_BE_LIKED_COUNTS = "redis_vlog_be_liked_counts";
