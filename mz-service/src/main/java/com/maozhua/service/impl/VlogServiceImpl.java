@@ -15,6 +15,7 @@ import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -110,6 +111,28 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
             vlogVO = list.get(0);
         }
         return vlogVO;
+    }
+
+    /**
+     * 用户把视频转为公开/私密
+     *
+     * @param userId  用户ID
+     * @param vlogId  视频ID
+     * @param yesOrNo 公开/私密 1：私密 0：公开
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void changeToPrivateOrPublic(String userId, String vlogId, Integer yesOrNo) {
+
+        Example example = new Example(Vlog.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id", vlogId);
+        criteria.andEqualTo("vlogerId", userId);
+
+        Vlog updatedVlog = new Vlog();
+        updatedVlog.setIsPrivate(yesOrNo);
+
+        vlogMapper.updateByExampleSelective(updatedVlog, example);
     }
 
 }
