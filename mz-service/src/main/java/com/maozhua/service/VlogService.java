@@ -43,8 +43,17 @@ public interface VlogService {
      * @param vlogId  视频ID
      * @param yesOrNo 公开/私密 1：私密 0：公开
      */
-    void changeToPrivateOrPublic(String userId,
-                                  String vlogId,
-                                  Integer yesOrNo);
+    void changeToPrivateOrPublic(String userId, String vlogId, Integer yesOrNo);
+
+    /**
+     * 获取我的视频列表
+     *
+     * @param userId   用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @param yesOrNo  公开/私密 1：私密 0：公开
+     * @return 视频列表
+     */
+    PagedGridResult listMyVlogs(String userId, Integer page, Integer pageSize, Integer yesOrNo);
 
 }

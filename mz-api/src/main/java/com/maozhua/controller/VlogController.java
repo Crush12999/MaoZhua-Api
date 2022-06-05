@@ -85,9 +85,39 @@ public class VlogController extends BaseInfoProperties {
     @ApiOperation(value = "将视频转为公开")
     @PostMapping("changeToPublic")
     public GraceJsonResult changeToPublic(@RequestParam String userId,
-                                           @RequestParam String vlogId) {
+                                          @RequestParam String vlogId) {
 
         vlogService.changeToPrivateOrPublic(userId, vlogId, YesOrNo.NO.type);
         return GraceJsonResult.ok();
+    }
+
+    /**
+     * 获取我的公开视频列表
+     *
+     * @return 公开视频列表
+     */
+    @ApiOperation(value = "获取我的公开视频列表")
+    @GetMapping("myPublicList")
+    public GraceJsonResult myPublicList(@RequestParam String userId,
+                                        @RequestParam(defaultValue = "1") Integer page,
+                                        @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        PagedGridResult gridResult = vlogService.listMyVlogs(userId, page, pageSize, YesOrNo.NO.type);
+        return GraceJsonResult.ok(gridResult);
+    }
+
+    /**
+     * 获取我的私有视频列表
+     *
+     * @return 我的私有视频列表
+     */
+    @ApiOperation(value = "获取我的私有视频列表")
+    @GetMapping("myPrivateList")
+    public GraceJsonResult myPrivateList(@RequestParam String userId,
+                                         @RequestParam(defaultValue = "1") Integer page,
+                                         @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        PagedGridResult gridResult = vlogService.listMyVlogs(userId, page, pageSize, YesOrNo.YES.type);
+        return GraceJsonResult.ok(gridResult);
     }
 }
