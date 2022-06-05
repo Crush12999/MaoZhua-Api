@@ -67,7 +67,7 @@ public class Vlog implements Serializable {
     private Integer commentsCounts;
 
     /**
-     * 是否私密，用户可以设置私密，如此可以不公开给比人看
+     * 是否私密，用户可以设置私密，如此可以不公开给别人看
      */
     @Column(name = "is_private")
     private Integer isPrivate;
