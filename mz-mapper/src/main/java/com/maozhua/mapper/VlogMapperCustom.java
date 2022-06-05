@@ -23,4 +23,12 @@ public interface VlogMapperCustom {
      */
     List<IndexVlogVO> listIndexVlogs(@Param("paramMap") Map<String, Object> map);
 
+    /**
+     * 通过 视频ID 获取视频详情
+     *
+     * @param map 查询参数
+     * @return 视频
+     */
+    List<IndexVlogVO> getVlogDetailById(@Param("paramMap") Map<String, Object> map);
+
 }

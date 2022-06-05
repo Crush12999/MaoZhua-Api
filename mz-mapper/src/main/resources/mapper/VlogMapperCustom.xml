@@ -5,17 +5,17 @@
 <mapper namespace="com.maozhua.mapper.VlogMapperCustom">
     <select id="listIndexVlogs" parameterType="map" resultType="com.maozhua.vo.IndexVlogVO">
         SELECT v.id as vlogId,
-            v.vloger_id as vlogerId,
-            u.face as vlogerFace,
-            u.nickname as vlogerName,
-            v.title as content,
-            v.url as url,
-            v.cover as cover,
-            v.width as width,
-            v.height as height,
-            v.like_counts as likeCounts,
-            v.comments_counts as commentsCounts,
-            v.is_private as isPrivate
+        v.vloger_id as vlogerId,
+        u.face as vlogerFace,
+        u.nickname as vlogerName,
+        v.title as content,
+        v.url as url,
+        v.cover as cover,
+        v.width as width,
+        v.height as height,
+        v.like_counts as likeCounts,
+        v.comments_counts as commentsCounts,
+        v.is_private as isPrivate
 
         FROM vlog v
         LEFT JOIN
@@ -29,5 +29,27 @@
 
         ORDER BY v.created_time
         DESC
+    </select>
+
+    <select id="getVlogDetailById" parameterType="map" resultType="com.maozhua.vo.IndexVlogVO">
+        SELECT v.id              as vlogId,
+               v.vloger_id       as vlogerId,
+               u.face            as vlogerFace,
+               u.nickname        as vlogerName,
+               v.title           as content,
+               v.url             as url,
+               v.cover           as cover,
+               v.width           as width,
+               v.height          as height,
+               v.like_counts     as likeCounts,
+               v.comments_counts as commentsCounts,
+               v.is_private      as isPrivate
+
+        FROM vlog v
+                 LEFT JOIN
+             users u
+             ON
+                 v.vloger_id = u.id
+        WHERE v.id = #{paramMap.vlogId}
     </select>
 </mapper>

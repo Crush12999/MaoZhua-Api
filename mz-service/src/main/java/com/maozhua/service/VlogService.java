@@ -2,6 +2,7 @@ package com.maozhua.service;
 
 import com.maozhua.bo.VlogBO;
 import com.maozhua.utils.PagedGridResult;
+import com.maozhua.vo.IndexVlogVO;
 
 /**
  * @author sryzzz
@@ -26,5 +27,13 @@ public interface VlogService {
      * @return 视频列表
      */
     PagedGridResult listIndexVlogs(String search, Integer page, Integer pageSize);
+
+    /**
+     * 通过 视频ID 获取视频详情
+     *
+     * @param vlogId 视频ID
+     * @return 视频
+     */
+    IndexVlogVO getVlogDetailById(String vlogId);
 
 }

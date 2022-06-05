@@ -5,6 +5,7 @@ import com.maozhua.bo.VlogBO;
 import com.maozhua.grace.result.GraceJsonResult;
 import com.maozhua.service.VlogService;
 import com.maozhua.utils.PagedGridResult;
+import com.maozhua.vo.IndexVlogVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -51,5 +52,18 @@ public class VlogController extends BaseInfoProperties {
 
         PagedGridResult gridResult = vlogService.listIndexVlogs(search, page, pageSize);
         return GraceJsonResult.ok(gridResult);
+    }
+
+    /**
+     * 通过视频ID获取视频信息
+     *
+     * @return 视频信息
+     */
+    @ApiOperation(value = "通过视频ID获取视频信息")
+    @GetMapping("detail")
+    public GraceJsonResult detail(@RequestParam(defaultValue = "") String userId,
+                                     @RequestParam String vlogId) {
+
+        return GraceJsonResult.ok(vlogService.getVlogDetailById(vlogId));
     }
 }

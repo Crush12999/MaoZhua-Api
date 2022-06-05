@@ -88,4 +88,28 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         return setterPagedGrid(list, page);
     }
 
+    /**
+     * 通过 视频ID 获取视频详情
+     *
+     * @param vlogId 视频ID
+     * @return 视频
+     */
+    @Override
+    public IndexVlogVO getVlogDetailById(String vlogId) {
+
+        IndexVlogVO vlogVO = null;
+        Map<String, Object> map = new HashMap<>();
+
+        if (StringUtils.isNotBlank(vlogId)) {
+            map.put("vlogId", vlogId);
+        }
+
+        List<IndexVlogVO> list = vlogMapperCustom.getVlogDetailById(map);
+
+        if (list != null && !list.isEmpty()) {
+            vlogVO = list.get(0);
+        }
+        return vlogVO;
+    }
+
 }
