@@ -103,6 +103,12 @@
             <artifactId>knife4j-springdoc-ui</artifactId>
         </dependency>
 
+        <!-- MinIO -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+        </dependency>
+
     </dependencies>
 
     <properties>

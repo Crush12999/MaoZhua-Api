@@ -1,40 +1,17 @@
 server:
-  port: 8099
   tomcat:
     uri-encoding: UTF-8
-    # 文件上传大小限制，tomcat默认大小2M，超过2M的文件不会被捕获，最好改一下
-    max-swallow-size: -1
+    max-swallow-size: -1  # tomcat默认大小2M，超过2M的文件不会被捕获，需要调整此处大小为100MB或者-1即可
 
 spring:
+  profiles:
+    active: dev
   banner:
     location: classpath:banner/banner.txt
   servlet:
     multipart:
       max-file-size: 2MB # 文件上传大小限制
       max-request-size: 2MB # 文件最大请求限制，用于批量上传
-
-  datasource:                                     # 数据源的相关配置
-    type: com.zaxxer.hikari.HikariDataSource      # 数据源的类型，可以更改为其他的数据源配置，比如druid
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/maozhua?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useUnicode=true&useSSL=false
-    username: root
-    password: 123456
-    hikari:
-      connection-timeout: 30000             # 等待连接池分配连接的最大时间（毫秒），超过这个时长还没有可用的连接，则会抛出SQLException
-      minimum-idle: 5                       # 最小连接数
-      maximum-pool-size: 20                 # 最大连接数
-      auto-commit: true                     # 自动提交
-      idle-timeout: 600000                  # 连接超时的最大时长（毫秒），超时则会被释放（retired）
-      pool-name: DataSourceHikariCP         # 连接池的名字
-      max-lifetime: 18000000                # 连接池的最大生命时长（毫秒），超时则会被释放（retired）
-      connection-test-query: SELECT 1
-
-  # Redis
-  redis:
-    host: 192.168.131.62
-    port: 6379
-    database: 0
-    password: 123456
 
 # mybatis
 mybatis:
