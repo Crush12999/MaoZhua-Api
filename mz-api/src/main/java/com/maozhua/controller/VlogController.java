@@ -165,10 +165,25 @@ public class VlogController extends BaseInfoProperties {
     @ApiOperation(value = "获取我喜欢的视频列表")
     @GetMapping("myLikedList")
     public GraceJsonResult myLikedList(@RequestParam String userId,
-                                         @RequestParam(defaultValue = "1") Integer page,
-                                         @RequestParam(defaultValue = "10") Integer pageSize) {
+                                       @RequestParam(defaultValue = "1") Integer page,
+                                       @RequestParam(defaultValue = "10") Integer pageSize) {
 
         PagedGridResult gridResult = vlogService.listMyLikedVlogs(userId, page, pageSize);
+        return GraceJsonResult.ok(gridResult);
+    }
+
+    /**
+     * 获取我关注的视频博主已发布的视频列表
+     *
+     * @return 我关注的视频博主已发布的视频列表
+     */
+    @ApiOperation(value = "获取我关注的视频博主已发布的视频列表")
+    @GetMapping("followList")
+    public GraceJsonResult followList(@RequestParam String myId,
+                                      @RequestParam(defaultValue = "1") Integer page,
+                                      @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        PagedGridResult gridResult = vlogService.listMyFollowVlogs(myId, page, pageSize);
         return GraceJsonResult.ok(gridResult);
     }
 }

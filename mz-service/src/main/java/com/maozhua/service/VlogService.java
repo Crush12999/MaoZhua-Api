@@ -93,4 +93,14 @@ public interface VlogService {
      */
     PagedGridResult listMyLikedVlogs(String userId, Integer page, Integer pageSize);
 
+    /**
+     * 获取我关注的视频博主已发布的视频列表
+     *
+     * @param myId     用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @return 视频列表
+     */
+    PagedGridResult listMyFollowVlogs(String myId, Integer page, Integer pageSize);
+
 }

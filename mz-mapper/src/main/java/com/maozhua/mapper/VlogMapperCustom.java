@@ -39,4 +39,12 @@ public interface VlogMapperCustom {
      */
     List<IndexVlogVO> listMyLikedVlogs(@Param("paramMap") Map<String, Object> map);
 
+    /**
+     * 获取我关注的视频博主已发布的视频列表
+     *
+     * @param map 查询参数
+     * @return 我关注的视频博主的视频列表
+     */
+    List<IndexVlogVO> listMyFollowVlogs(@Param("paramMap") Map<String, Object> map);
+
 }
