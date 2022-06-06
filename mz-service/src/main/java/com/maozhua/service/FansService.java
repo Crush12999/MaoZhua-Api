@@ -44,4 +44,14 @@ public interface FansService {
      */
     PagedGridResult listMyFollows(String myId, Integer page, Integer pageSize);
 
+    /**
+     * 获取我的粉丝列表
+     *
+     * @param myId     用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @return 我的粉丝列表
+     */
+    PagedGridResult listMyFans(String myId, Integer page, Integer pageSize);
+
 }

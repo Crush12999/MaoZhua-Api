@@ -8,8 +8,8 @@ import com.maozhua.mapper.FansMapperCustom;
 import com.maozhua.pojo.Fans;
 import com.maozhua.service.FansService;
 import com.maozhua.utils.PagedGridResult;
+import com.maozhua.vo.FansVO;
 import com.maozhua.vo.VlogerVO;
-import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -146,6 +146,24 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         PageHelper.startPage(page, pageSize);
         List<VlogerVO> myFollows = fansMapperCustom.listMyFollows(map);
         return setterPagedGrid(myFollows, page);
+    }
+
+    /**
+     * 获取我的粉丝列表
+     *
+     * @param myId     用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @return 我的粉丝列表
+     */
+    @Override
+    public PagedGridResult listMyFans(String myId, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("myId", myId);
+
+        PageHelper.startPage(page, pageSize);
+        List<FansVO> myFans = fansMapperCustom.listMyFans(map);
+        return setterPagedGrid(myFans, page);
     }
 
     public Fans queryFansRelationship(String fanId, String vlogerId) {
