@@ -64,4 +64,13 @@ public interface VlogService {
      * @param vlogId   视频ID
      */
     void userLikeVlog(String userId, String vlogerId, String vlogId);
+
+    /**
+     * 用户取消点赞视频
+     *
+     * @param userId   用户ID
+     * @param vlogerId 视频博主ID
+     * @param vlogId   视频ID
+     */
+    void userUnLikeVlog(String userId, String vlogerId, String vlogId);
 }

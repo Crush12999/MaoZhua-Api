@@ -181,12 +181,40 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
         myLikedVlogMapper.insert(myLikedVlog);
 
-        // 点赞后，视频和视频发布者的获赞都会 +1
-        redisOperator.increment(REDIS_VLOG_BE_LIKED_COUNTS + ":" + vlogerId, 1);
+        // 点赞后，视频获赞 +1
+        redisOperator.increment(REDIS_VLOG_BE_LIKED_COUNTS + ":" + vlogId, 1);
         redisOperator.increment(REDIS_VLOGER_BE_LIKED_COUNTS + ":" + vlogerId, 1);
 
         // 我点赞的视频需要再Redis中保存关联关系
         redisOperator.set(REDIS_USER_LIKE_VLOG + ":" + userId + ":" + vlogId, ONE);
+    }
+
+    /**
+     * 用户取消点赞视频
+     *
+     * @param userId   用户ID
+     * @param vlogerId 视频博主ID
+     * @param vlogId   视频ID
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void userUnLikeVlog(String userId, String vlogerId, String vlogId) {
+        MyLikedVlog myLikedVlog = new MyLikedVlog();
+        myLikedVlog.setUserId(userId);
+        myLikedVlog.setVlogId(vlogId);
+        myLikedVlogMapper.delete(myLikedVlog);
+
+        String vlogLikeCount = redisOperator.get(REDIS_VLOG_BE_LIKED_COUNTS + ":" + vlogId);
+        String vlogerLikeCount = redisOperator.get(REDIS_VLOGER_BE_LIKED_COUNTS + ":" + vlogerId);
+        if (!ZERO.equals(vlogLikeCount)) {
+            redisOperator.decrement(REDIS_VLOG_BE_LIKED_COUNTS + ":" + vlogId, 1);
+        }
+        if (!ZERO.equals(vlogerLikeCount)) {
+            redisOperator.decrement(REDIS_VLOGER_BE_LIKED_COUNTS + ":" + vlogerId, 1);
+        }
+
+        // 我点赞的视频需要再Redis中保存关联关系
+        redisOperator.del(REDIS_USER_LIKE_VLOG + ":" + userId + ":" + vlogId);
     }
 
 }

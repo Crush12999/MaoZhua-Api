@@ -84,6 +84,6 @@ public class UserVO {
     // @ApiModelProperty(value = "喜欢我的视频总数")
     // private Integer myLikedVlogCounts;
 
-    @ApiModelProperty(value = "喜欢我的总数")
+    @ApiModelProperty(value = "喜欢我的（获赞）总数")
     private Integer totalLikeMeCounts;
 }

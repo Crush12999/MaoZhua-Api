@@ -134,4 +134,16 @@ public class VlogController extends BaseInfoProperties {
 
         return GraceJsonResult.ok();
     }
+
+    /**
+     * 用户取消点赞视频
+     */
+    @ApiOperation(value = "用户取消点赞视频")
+    @PostMapping("unlike")
+    public GraceJsonResult unlike(@RequestParam String userId,
+                                @RequestParam String vlogerId,
+                                @RequestParam String vlogId) {
+        vlogService.userUnLikeVlog(userId, vlogerId, vlogId);
+        return GraceJsonResult.ok();
+    }
 }
