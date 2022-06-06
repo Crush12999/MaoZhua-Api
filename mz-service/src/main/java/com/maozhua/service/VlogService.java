@@ -74,4 +74,12 @@ public interface VlogService {
      * @param vlogId   视频ID
      */
     void userUnLikeVlog(String userId, String vlogerId, String vlogId);
+
+    /**
+     * 获取视频点赞总数
+     *
+     * @param vlogId 视频ID
+     * @return 视频点赞总数
+     */
+    Integer getLikeVlogCount(String vlogId);
 }

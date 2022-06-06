@@ -94,6 +94,7 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
         for (IndexVlogVO vlogVO : list) {
             if (StringUtils.isNotBlank(myId)) {
+                vlogVO.setLikeCounts(getLikeVlogCount(vlogVO.getVlogId()));
                 vlogVO.setDoIFollowVloger(doIFollowVloger(myId, vlogVO.getVlogerId()));
                 vlogVO.setDoILikeThisVlog(doILikeVlog(myId, vlogVO.getVlogId()));
             }
@@ -247,11 +248,26 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
      * @param vlogerId 视频博主ID
      * @return 是否关注了视频博主
      */
-    private boolean doIFollowVloger (String myId, String vlogerId) {
+    private boolean doIFollowVloger(String myId, String vlogerId) {
         if (redisOperator.keyIsExist(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId)) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取视频点赞总数
+     *
+     * @param vlogId 视频ID
+     * @return 视频点赞总数
+     */
+    @Override
+    public Integer getLikeVlogCount(String vlogId) {
+        String likeCountStr = redisOperator.get(REDIS_VLOG_BE_LIKED_COUNTS + ":" + vlogId);
+        if (StringUtils.isBlank(likeCountStr)) {
+            return 0;
+        }
+        return Integer.parseInt(likeCountStr);
     }
 
 }

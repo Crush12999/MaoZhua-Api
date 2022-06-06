@@ -147,4 +147,13 @@ public class VlogController extends BaseInfoProperties {
         vlogService.userUnLikeVlog(userId, vlogerId, vlogId);
         return GraceJsonResult.ok();
     }
+
+    /**
+     * 获得当前视频点赞数
+     */
+    @ApiOperation(value = "获得当前视频点赞数")
+    @PostMapping("totalLikedCounts")
+    public GraceJsonResult totalLikedCounts(@RequestParam String vlogId) {
+        return GraceJsonResult.ok(vlogService.getLikeVlogCount(vlogId));
+    }
 }
