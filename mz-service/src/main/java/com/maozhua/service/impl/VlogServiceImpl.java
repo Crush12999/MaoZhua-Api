@@ -110,11 +110,12 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
     /**
      * 通过 视频ID 获取视频详情
      *
+     * @param userId 用户ID
      * @param vlogId 视频ID
      * @return 视频
      */
     @Override
-    public IndexVlogVO getVlogDetailById(String vlogId) {
+    public IndexVlogVO getVlogDetailById(String userId, String vlogId) {
 
         IndexVlogVO vlogVO = null;
         Map<String, Object> map = new HashMap<>();
@@ -127,6 +128,7 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
         if (list != null && !list.isEmpty()) {
             vlogVO = list.get(0);
+            return setterVo(vlogVO, userId);
         }
         return vlogVO;
     }
@@ -305,6 +307,42 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         }
 
         return setterPagedGrid(voList, page);
+    }
+
+    /**
+     * 获取朋友（互关）发布的视频列表
+     *
+     * @param myId     用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @return 朋友（互关）发布的视频列表
+     */
+    @Override
+    public PagedGridResult listMyFriendVlogs(String myId, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("myId", myId);
+
+        PageHelper.startPage(page, pageSize);
+        List<IndexVlogVO> voList = vlogMapperCustom.listMyFriendVlogs(map);
+
+        for (IndexVlogVO vlogVO : voList) {
+            if (StringUtils.isNotBlank(myId)) {
+                vlogVO.setLikeCounts(getLikeVlogCount(vlogVO.getVlogId()));
+                vlogVO.setDoIFollowVloger(true);
+                vlogVO.setDoILikeThisVlog(doILikeVlog(myId, vlogVO.getVlogId()));
+            }
+        }
+
+        return setterPagedGrid(voList, page);
+    }
+
+    private IndexVlogVO setterVo(IndexVlogVO vlogVO, String userId) {
+        if (StringUtils.isNotBlank(userId)) {
+            vlogVO.setLikeCounts(getLikeVlogCount(vlogVO.getVlogId()));
+            vlogVO.setDoIFollowVloger(fansService.queryDoMeFollowVloger(userId, vlogVO.getVlogerId()));
+            vlogVO.setDoILikeThisVlog(doILikeVlog(userId, vlogVO.getVlogId()));
+        }
+        return vlogVO;
     }
 
 }

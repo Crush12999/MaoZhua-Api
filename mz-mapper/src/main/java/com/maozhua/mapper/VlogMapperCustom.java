@@ -47,4 +47,12 @@ public interface VlogMapperCustom {
      */
     List<IndexVlogVO> listMyFollowVlogs(@Param("paramMap") Map<String, Object> map);
 
+    /**
+     * 获取朋友（互关）发布的视频列表
+     *
+     * @param map 查询参数
+     * @return 朋友（互关）发布的视频列表
+     */
+    List<IndexVlogVO> listMyFriendVlogs(@Param("paramMap") Map<String, Object> map);
+
 }

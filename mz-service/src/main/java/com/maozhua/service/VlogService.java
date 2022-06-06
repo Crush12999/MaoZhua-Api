@@ -32,10 +32,11 @@ public interface VlogService {
     /**
      * 通过 视频ID 获取视频详情
      *
+     * @param userId 用户ID
      * @param vlogId 视频ID
      * @return 视频
      */
-    IndexVlogVO getVlogDetailById(String vlogId);
+    IndexVlogVO getVlogDetailById(String userId, String vlogId);
 
     /**
      * 用户把视频转为公开/私密
@@ -102,5 +103,15 @@ public interface VlogService {
      * @return 视频列表
      */
     PagedGridResult listMyFollowVlogs(String myId, Integer page, Integer pageSize);
+
+    /**
+     * 获取朋友（互关）发布的视频列表
+     *
+     * @param myId     用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @return 朋友（互关）发布的视频列表
+     */
+    PagedGridResult listMyFriendVlogs(String myId, Integer page, Integer pageSize);
 
 }

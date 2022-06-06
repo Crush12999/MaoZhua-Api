@@ -104,4 +104,31 @@
         ORDER BY v.created_time
                 DESC
     </select>
+
+    <select id="listMyFriendVlogs" parameterType="map" resultType="com.maozhua.vo.IndexVlogVO">
+        SELECT v.id              as vlogId,
+               v.vloger_id       as vlogerId,
+               u.face            as vlogerFace,
+               u.nickname        as vlogerName,
+               v.title           as content,
+               v.url             as url,
+               v.cover           as cover,
+               v.width           as width,
+               v.height          as height,
+               v.like_counts     as likeCounts,
+               v.comments_counts as commentsCounts,
+               v.is_private      as isPrivate
+
+        FROM vlog v
+                 LEFT JOIN
+             fans f ON v.vloger_id = f.fan_id
+                 LEFT JOIN users u
+                           ON
+                               f.fan_id = u.id
+        WHERE v.is_private = 0
+          AND f.is_fan_friend_of_mine = 1
+          AND f.vloger_id = #{paramMap.myId}
+        ORDER BY v.created_time
+                DESC
+    </select>
 </mapper>

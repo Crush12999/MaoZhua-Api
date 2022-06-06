@@ -65,7 +65,7 @@ public class VlogController extends BaseInfoProperties {
     public GraceJsonResult detail(@RequestParam(defaultValue = "") String userId,
                                   @RequestParam String vlogId) {
 
-        return GraceJsonResult.ok(vlogService.getVlogDetailById(vlogId));
+        return GraceJsonResult.ok(vlogService.getVlogDetailById(userId, vlogId));
     }
 
     /**
@@ -184,6 +184,21 @@ public class VlogController extends BaseInfoProperties {
                                       @RequestParam(defaultValue = "10") Integer pageSize) {
 
         PagedGridResult gridResult = vlogService.listMyFollowVlogs(myId, page, pageSize);
+        return GraceJsonResult.ok(gridResult);
+    }
+
+    /**
+     * 获取朋友（互关）发布的视频列表
+     *
+     * @return 朋友发布的视频列表
+     */
+    @ApiOperation(value = "获取朋友（互关）发布的视频列表")
+    @GetMapping("friendList")
+    public GraceJsonResult friendList(@RequestParam String myId,
+                                      @RequestParam(defaultValue = "1") Integer page,
+                                      @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        PagedGridResult gridResult = vlogService.listMyFriendVlogs(myId, page, pageSize);
         return GraceJsonResult.ok(gridResult);
     }
 }
