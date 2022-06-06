@@ -120,4 +120,18 @@ public class VlogController extends BaseInfoProperties {
         PagedGridResult gridResult = vlogService.listMyVlogs(userId, page, pageSize, YesOrNo.YES.type);
         return GraceJsonResult.ok(gridResult);
     }
+
+    /**
+     * 用户点赞视频
+     */
+    @ApiOperation(value = "用户点赞视频")
+    @PostMapping("like")
+    public GraceJsonResult like(@RequestParam String userId,
+                                @RequestParam String vlogerId,
+                                @RequestParam String vlogId) {
+
+        vlogService.userLikeVlog(userId, vlogerId, vlogId);
+
+        return GraceJsonResult.ok();
+    }
 }

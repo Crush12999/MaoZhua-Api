@@ -56,4 +56,12 @@ public interface VlogService {
      */
     PagedGridResult listMyVlogs(String userId, Integer page, Integer pageSize, Integer yesOrNo);
 
+    /**
+     * 用户点赞/喜欢视频
+     *
+     * @param userId   用户ID
+     * @param vlogerId 视频博主ID
+     * @param vlogId   视频ID
+     */
+    void userLikeVlog(String userId, String vlogerId, String vlogId);
 }

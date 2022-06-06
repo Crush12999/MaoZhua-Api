@@ -4,8 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.bo.VlogBO;
 import com.maozhua.enums.YesOrNo;
+import com.maozhua.mapper.MyLikedVlogMapper;
 import com.maozhua.mapper.VlogMapper;
 import com.maozhua.mapper.VlogMapperCustom;
+import com.maozhua.pojo.MyLikedVlog;
 import com.maozhua.pojo.Vlog;
 import com.maozhua.service.VlogService;
 import com.maozhua.utils.PagedGridResult;
@@ -33,6 +35,9 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
     @Resource
     private VlogMapper vlogMapper;
+
+    @Resource
+    private MyLikedVlogMapper myLikedVlogMapper;
 
     @Resource
     private VlogMapperCustom vlogMapperCustom;
@@ -155,6 +160,33 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         List<Vlog> vlogList = vlogMapper.selectByExample(example);
 
         return setterPagedGrid(vlogList, page);
+    }
+
+    /**
+     * 用户点赞/喜欢视频
+     *
+     * @param userId   用户ID
+     * @param vlogerId 视频博主ID
+     * @param vlogId   视频ID
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void userLikeVlog(String userId, String vlogerId, String vlogId) {
+        String rid = sid.nextShort();
+
+        MyLikedVlog myLikedVlog = new MyLikedVlog();
+        myLikedVlog.setId(rid);
+        myLikedVlog.setUserId(userId);
+        myLikedVlog.setVlogId(vlogId);
+
+        myLikedVlogMapper.insert(myLikedVlog);
+
+        // 点赞后，视频和视频发布者的获赞都会 +1
+        redisOperator.increment(REDIS_VLOG_BE_LIKED_COUNTS + ":" + vlogerId, 1);
+        redisOperator.increment(REDIS_VLOGER_BE_LIKED_COUNTS + ":" + vlogerId, 1);
+
+        // 我点赞的视频需要再Redis中保存关联关系
+        redisOperator.set(REDIS_USER_LIKE_VLOG + ":" + userId + ":" + vlogId, ONE);
     }
 
 }

@@ -38,9 +38,6 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
     @Resource
     private Sid sid;
 
-    private final static String ZERO = "0";
-    private final static String ONE = "1";
-
     /**
      * 关注
      *
