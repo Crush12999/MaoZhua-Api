@@ -10,6 +10,7 @@ import com.maozhua.service.FansService;
 import com.maozhua.utils.PagedGridResult;
 import com.maozhua.vo.FansVO;
 import com.maozhua.vo.VlogerVO;
+import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,6 +164,14 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
 
         PageHelper.startPage(page, pageSize);
         List<FansVO> myFans = fansMapperCustom.listMyFans(map);
+
+        for (FansVO fansVO : myFans) {
+            String relationship = redisOperator.get(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + fansVO.getFanId());
+            if (StringUtils.isNotBlank(relationship) && ONE.equalsIgnoreCase(relationship)) {
+                fansVO.setFriend(true);
+            }
+        }
+
         return setterPagedGrid(myFans, page);
     }
 

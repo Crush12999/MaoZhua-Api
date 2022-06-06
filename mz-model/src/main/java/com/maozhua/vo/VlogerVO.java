@@ -29,5 +29,5 @@ public class VlogerVO {
     private String face;
 
     @ApiModelProperty(value = "是否关注")
-    private Boolean isFollowed = true;
+    private Boolean followed = true;
 }

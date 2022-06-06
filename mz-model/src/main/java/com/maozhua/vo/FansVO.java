@@ -29,5 +29,5 @@ public class FansVO {
     private String face;
 
     @ApiModelProperty(value = "是否互粉")
-    private Boolean isFriend = false;
+    private Boolean friend = false;
 }

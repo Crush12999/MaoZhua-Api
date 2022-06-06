@@ -86,8 +86,8 @@ public class FansController extends BaseInfoProperties {
     @ApiOperation(value = "查询我的粉丝列表")
     @GetMapping("queryMyFans")
     public GraceJsonResult queryMyFans(@RequestParam String myId,
-                                          @RequestParam(defaultValue = "1") Integer page,
-                                          @RequestParam(defaultValue = "10") Integer pageSize) {
+                                       @RequestParam(defaultValue = "1") Integer page,
+                                       @RequestParam(defaultValue = "10") Integer pageSize) {
         return GraceJsonResult.ok(fansService.listMyFans(myId, page, pageSize));
     }
 }
