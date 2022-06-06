@@ -156,4 +156,19 @@ public class VlogController extends BaseInfoProperties {
     public GraceJsonResult totalLikedCounts(@RequestParam String vlogId) {
         return GraceJsonResult.ok(vlogService.getLikeVlogCount(vlogId));
     }
+
+    /**
+     * 获取我喜欢的视频列表
+     *
+     * @return 我喜欢的视频列表
+     */
+    @ApiOperation(value = "获取我喜欢的视频列表")
+    @GetMapping("myLikedList")
+    public GraceJsonResult myLikedList(@RequestParam String userId,
+                                         @RequestParam(defaultValue = "1") Integer page,
+                                         @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        PagedGridResult gridResult = vlogService.listMyLikedVlogs(userId, page, pageSize);
+        return GraceJsonResult.ok(gridResult);
+    }
 }

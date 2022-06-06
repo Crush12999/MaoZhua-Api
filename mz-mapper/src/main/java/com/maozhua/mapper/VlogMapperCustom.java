@@ -31,4 +31,12 @@ public interface VlogMapperCustom {
      */
     List<IndexVlogVO> getVlogDetailById(@Param("paramMap") Map<String, Object> map);
 
+    /**
+     * 获取我喜欢的视频列表
+     *
+     * @param map 查询参数
+     * @return 我喜欢的视频列表
+     */
+    List<IndexVlogVO> listMyLikedVlogs(@Param("paramMap") Map<String, Object> map);
+
 }

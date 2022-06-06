@@ -82,4 +82,15 @@ public interface VlogService {
      * @return 视频点赞总数
      */
     Integer getLikeVlogCount(String vlogId);
+
+    /**
+     * 获取我点赞过的视频列表
+     *
+     * @param userId   用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @return 视频列表
+     */
+    PagedGridResult listMyLikedVlogs(String userId, Integer page, Integer pageSize);
+
 }

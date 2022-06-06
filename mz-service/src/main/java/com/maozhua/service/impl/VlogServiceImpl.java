@@ -270,4 +270,23 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         return Integer.parseInt(likeCountStr);
     }
 
+    /**
+     * 获取我点赞过的视频列表
+     *
+     * @param userId   用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @return 视频列表
+     */
+    @Override
+    public PagedGridResult listMyLikedVlogs(String userId, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+
+        PageHelper.startPage(page, pageSize);
+        List<IndexVlogVO> voList = vlogMapperCustom.listMyLikedVlogs(map);
+
+        return setterPagedGrid(voList, page);
+    }
+
 }

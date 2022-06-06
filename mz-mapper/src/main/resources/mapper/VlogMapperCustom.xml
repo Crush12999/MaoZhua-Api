@@ -52,4 +52,30 @@
                  v.vloger_id = u.id
         WHERE v.id = #{paramMap.vlogId}
     </select>
+
+    <select id="listMyLikedVlogs" parameterType="map" resultType="com.maozhua.vo.IndexVlogVO">
+        SELECT v.id              as vlogId,
+               v.vloger_id       as vlogerId,
+               u.face            as vlogerFace,
+               u.nickname        as vlogerName,
+               v.title           as content,
+               v.url             as url,
+               v.cover           as cover,
+               v.width           as width,
+               v.height          as height,
+               v.like_counts     as likeCounts,
+               v.comments_counts as commentsCounts,
+               v.is_private      as isPrivate
+
+        FROM vlog v
+                 LEFT JOIN
+             my_liked_vlog mlv ON v.id = mlv.vlog_id
+                 LEFT JOIN users u
+                           ON
+                               mlv.user_id = u.id
+        WHERE u.id = #{paramMap.userId}
+          AND v.is_private = 0
+        ORDER BY v.created_time
+                DESC
+    </select>
 </mapper>
