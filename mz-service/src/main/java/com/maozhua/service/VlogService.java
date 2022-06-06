@@ -21,12 +21,13 @@ public interface VlogService {
     /**
      * 获取首页/搜索的视频列表
      *
+     * @param myId     我的ID
      * @param search   视频标题
      * @param page     第几页
      * @param pageSize 每页显示多少条视频
      * @return 视频列表
      */
-    PagedGridResult listIndexVlogs(String search, Integer page, Integer pageSize);
+    PagedGridResult listIndexVlogs(String myId, String search, Integer page, Integer pageSize);
 
     /**
      * 通过 视频ID 获取视频详情

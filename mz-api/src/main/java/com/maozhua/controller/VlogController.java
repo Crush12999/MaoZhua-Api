@@ -46,11 +46,12 @@ public class VlogController extends BaseInfoProperties {
      */
     @ApiOperation(value = "获取首页/搜索的视频列表")
     @GetMapping("indexList")
-    public GraceJsonResult indexList(@RequestParam(defaultValue = "") String search,
+    public GraceJsonResult indexList(@RequestParam(defaultValue = "") String userId,
+                                     @RequestParam(defaultValue = "") String search,
                                      @RequestParam(defaultValue = "1") Integer page,
                                      @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        PagedGridResult gridResult = vlogService.listIndexVlogs(search, page, pageSize);
+        PagedGridResult gridResult = vlogService.listIndexVlogs(userId, search, page, pageSize);
         return GraceJsonResult.ok(gridResult);
     }
 
@@ -141,8 +142,8 @@ public class VlogController extends BaseInfoProperties {
     @ApiOperation(value = "用户取消点赞视频")
     @PostMapping("unlike")
     public GraceJsonResult unlike(@RequestParam String userId,
-                                @RequestParam String vlogerId,
-                                @RequestParam String vlogId) {
+                                  @RequestParam String vlogerId,
+                                  @RequestParam String vlogId) {
         vlogService.userUnLikeVlog(userId, vlogerId, vlogId);
         return GraceJsonResult.ok();
     }

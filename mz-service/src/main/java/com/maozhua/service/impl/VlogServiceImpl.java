@@ -73,13 +73,14 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
     /**
      * 获取首页/搜索的视频列表
      *
+     * @param myId     我的ID
      * @param search   视频标题
      * @param page     第几页
      * @param pageSize 每页显示多少条视频
      * @return 视频列表
      */
     @Override
-    public PagedGridResult listIndexVlogs(String search, Integer page, Integer pageSize) {
+    public PagedGridResult listIndexVlogs(String myId, String search, Integer page, Integer pageSize) {
 
         PageHelper.startPage(page, pageSize);
 
@@ -90,6 +91,13 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         }
 
         List<IndexVlogVO> list = vlogMapperCustom.listIndexVlogs(map);
+
+        for (IndexVlogVO vlogVO : list) {
+            if (StringUtils.isNotBlank(myId)) {
+                vlogVO.setDoIFollowVloger(doIFollowVloger(myId, vlogVO.getVlogerId()));
+                vlogVO.setDoILikeThisVlog(doILikeVlog(myId, vlogVO.getVlogId()));
+            }
+        }
 
         return setterPagedGrid(list, page);
     }
@@ -215,6 +223,35 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
         // 我点赞的视频需要再Redis中保存关联关系
         redisOperator.del(REDIS_USER_LIKE_VLOG + ":" + userId + ":" + vlogId);
+    }
+
+    /**
+     * 判断我是否喜欢这个视频
+     *
+     * @param myId   用户ID
+     * @param vlogId 视频ID
+     * @return 是否喜欢这个视频
+     */
+    private boolean doILikeVlog(String myId, String vlogId) {
+        String doILike = redisOperator.get(REDIS_USER_LIKE_VLOG + ":" + myId + ":" + vlogId);
+        if (StringUtils.isNotBlank(doILike) && ONE.equalsIgnoreCase(doILike)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断我是否关注了视频博主
+     *
+     * @param myId     用户ID
+     * @param vlogerId 视频博主ID
+     * @return 是否关注了视频博主
+     */
+    private boolean doIFollowVloger (String myId, String vlogerId) {
+        if (redisOperator.keyIsExist(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId)) {
+            return true;
+        }
+        return false;
     }
 
 }
