@@ -1,10 +1,14 @@
 package com.maozhua.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.enums.YesOrNo;
 import com.maozhua.mapper.FansMapper;
+import com.maozhua.mapper.FansMapperCustom;
 import com.maozhua.pojo.Fans;
 import com.maozhua.service.FansService;
+import com.maozhua.utils.PagedGridResult;
+import com.maozhua.vo.VlogerVO;
 import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
 import org.springframework.stereotype.Service;
@@ -12,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author sryzzz
@@ -23,6 +30,9 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
 
     @Resource
     private FansMapper fansMapper;
+
+    @Resource
+    private FansMapperCustom fansMapperCustom;
 
     @Resource
     private Sid sid;
@@ -118,6 +128,24 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 获取我关注的博主列表
+     *
+     * @param myId     用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @return 我关注的博主列表
+     */
+    @Override
+    public PagedGridResult listMyFollows(String myId, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("myId", myId);
+
+        PageHelper.startPage(page, pageSize);
+        List<VlogerVO> myFollows = fansMapperCustom.listMyFollows(map);
+        return setterPagedGrid(myFollows, page);
     }
 
     public Fans queryFansRelationship(String fanId, String vlogerId) {

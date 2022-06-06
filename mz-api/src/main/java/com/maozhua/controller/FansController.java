@@ -7,6 +7,7 @@ import com.maozhua.pojo.Users;
 import com.maozhua.service.FansService;
 import com.maozhua.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class FansController extends BaseInfoProperties {
     @Resource
     private FansService fansService;
 
+    @ApiOperation(value = "关注博主")
     @PostMapping("follow")
     public GraceJsonResult follow(@RequestParam String myId,
                                   @RequestParam String vlogerId) {
@@ -56,6 +58,7 @@ public class FansController extends BaseInfoProperties {
         return GraceJsonResult.ok();
     }
 
+    @ApiOperation(value = "取消关注博主")
     @PostMapping("cancel")
     public GraceJsonResult cancel(@RequestParam String myId,
                                   @RequestParam String vlogerId) {
@@ -65,9 +68,18 @@ public class FansController extends BaseInfoProperties {
         return GraceJsonResult.ok();
     }
 
+    @ApiOperation(value = "查询我是否关注了该博主")
     @GetMapping("queryDoIFollowVloger")
     public GraceJsonResult queryDoMeFollowVloger(@RequestParam String myId,
-                                  @RequestParam String vlogerId) {
+                                                 @RequestParam String vlogerId) {
         return GraceJsonResult.ok(fansService.queryDoMeFollowVloger(myId, vlogerId));
+    }
+
+    @ApiOperation(value = "查询我关注的博主列表")
+    @GetMapping("queryMyFollows")
+    public GraceJsonResult queryMyFollows(@RequestParam String myId,
+                                          @RequestParam(defaultValue = "1") Integer page,
+                                          @RequestParam(defaultValue = "10") Integer pageSize) {
+        return GraceJsonResult.ok(fansService.listMyFollows(myId, page, pageSize));
     }
 }

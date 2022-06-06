@@ -1,5 +1,7 @@
 package com.maozhua.service;
 
+import com.maozhua.utils.PagedGridResult;
+
 /**
  * @author sryzzz
  * @create 2022/6/2 23:27
@@ -31,5 +33,15 @@ public interface FansService {
      * @return 是否关注博主
      */
     Boolean queryDoMeFollowVloger(String myId, String vlogerId);
+
+    /**
+     * 获取我关注的博主列表
+     *
+     * @param myId     用户ID
+     * @param page     当前页
+     * @param pageSize 每页显示视频条数
+     * @return 我关注的博主列表
+     */
+    PagedGridResult listMyFollows(String myId, Integer page, Integer pageSize);
 
 }
