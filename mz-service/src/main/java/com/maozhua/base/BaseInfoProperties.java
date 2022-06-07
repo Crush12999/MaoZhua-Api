@@ -35,6 +35,19 @@ public class BaseInfoProperties {
     public static final String REDIS_USER_INFO = "redis_user_info";
 
     /**
+     * 短视频的评论总数
+     */
+    public static final String REDIS_VLOG_COMMENT_COUNTS = "redis_vlog_comment_counts";
+    /**
+     * 短视频的评论喜欢数量
+     */
+    public static final String REDIS_VLOG_COMMENT_LIKED_COUNTS = "redis_vlog_comment_liked_counts";
+    /**
+     * 用户点赞评论
+     */
+    public static final String REDIS_USER_LIKE_COMMENT = "redis_user_like_comment";
+
+    /**
      * 我的关注总数
      */
     public static final String REDIS_MY_FOLLOWS_COUNTS = "redis_my_follows_counts";
