@@ -7,6 +7,7 @@ import com.maozhua.service.CommentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,5 +31,15 @@ public class CommentController extends BaseInfoProperties {
     @PostMapping("create")
     public GraceJsonResult createComment(@Valid @RequestBody CommentBO commentBO) {
         return GraceJsonResult.ok(commentService.createComment(commentBO));
+    }
+
+    @ApiOperation(value = "获取视频评论数")
+    @GetMapping("counts")
+    public GraceJsonResult createComment(@RequestParam String vlogId) {
+        String commentCountStr = redisOperator.get(REDIS_VLOG_COMMENT_COUNTS + ":" + vlogId);
+        if (StringUtils.isBlank(commentCountStr)) {
+            commentCountStr = ZERO;
+        }
+        return GraceJsonResult.ok(Integer.parseInt(commentCountStr));
     }
 }
