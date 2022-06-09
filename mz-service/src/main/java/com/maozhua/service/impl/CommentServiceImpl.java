@@ -1,10 +1,13 @@
 package com.maozhua.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.bo.CommentBO;
 import com.maozhua.mapper.CommentMapper;
+import com.maozhua.mapper.CommentMapperCustom;
 import com.maozhua.pojo.Comment;
 import com.maozhua.service.CommentService;
+import com.maozhua.utils.PagedGridResult;
 import com.maozhua.vo.CommentVO;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
@@ -12,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author sryzzz
@@ -23,6 +29,9 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
 
     @Resource
     private CommentMapper commentMapper;
+
+    @Resource
+    private CommentMapperCustom commentMapperCustom;
 
     @Resource
     private Sid sid;
@@ -58,6 +67,26 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
         BeanUtils.copyProperties(comment, commentVO);
 
         return commentVO;
+    }
+
+    /**
+     * 查询评论列表
+     *
+     * @param vlogId   视频ID
+     * @param page     第几页
+     * @param pageSize 每页显示多少条
+     * @return 评论列表
+     */
+    @Override
+    public PagedGridResult listVlogComments(String vlogId, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("vlogId", vlogId);
+
+        PageHelper.startPage(page, pageSize);
+
+        List<CommentVO> comments = commentMapperCustom.listVlogComments(map);
+
+        return setterPagedGrid(comments, page);
     }
 
 }

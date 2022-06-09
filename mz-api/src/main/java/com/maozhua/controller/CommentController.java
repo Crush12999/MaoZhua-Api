@@ -35,11 +35,21 @@ public class CommentController extends BaseInfoProperties {
 
     @ApiOperation(value = "获取视频评论数")
     @GetMapping("counts")
-    public GraceJsonResult createComment(@RequestParam String vlogId) {
+    public GraceJsonResult counts(@RequestParam String vlogId) {
         String commentCountStr = redisOperator.get(REDIS_VLOG_COMMENT_COUNTS + ":" + vlogId);
         if (StringUtils.isBlank(commentCountStr)) {
             commentCountStr = ZERO;
         }
         return GraceJsonResult.ok(Integer.parseInt(commentCountStr));
+    }
+
+    @ApiOperation(value = "获取视频评论列表")
+    @GetMapping("list")
+    public GraceJsonResult listComments(@RequestParam String vlogId,
+                                        @RequestParam(defaultValue = "") String userId,
+                                        @RequestParam(defaultValue = "1") Integer page,
+                                        @RequestParam(defaultValue = "10") Integer pageSize) {
+
+        return GraceJsonResult.ok(commentService.listVlogComments(vlogId, page, pageSize));
     }
 }

@@ -29,7 +29,7 @@ public class SmsUtil {
     @Resource
     private TencentCloudProperties tencentCloudProperties;
 
-    public void sendSms(String phone, String code) throws Exception {
+    public void sendSms(String phone, String code, Integer expiration) throws Exception {
         try {
             /* 必要步骤：
              * 实例化一个认证对象，入参需要传入腾讯云账户密钥对secretId，secretKey。
@@ -91,7 +91,7 @@ public class SmsUtil {
             req.setTemplateId(tencentCloudProperties.getTemplateId());
 
             /* 模板参数: 模板参数的个数需要与 TemplateId 对应模板的变量个数保持一致，若无模板参数，则设置为空 */
-            String[] templateParamSet = {code};
+            String[] templateParamSet = { code, String.valueOf(expiration)};
             req.setTemplateParamSet(templateParamSet);
 
             /* 下发手机号码，采用 E.164 标准，+[国家或地区码][手机号]

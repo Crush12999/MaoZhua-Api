@@ -51,7 +51,7 @@ public class PassportController extends BaseInfoProperties {
         redisOperator.setnx60s(mobileSmsCodeKey, userIp);
 
         String code = (int)((Math.random() * 9 + 1) * 100000) + "";
-        smsUtil.sendSms(mobile, code);
+        smsUtil.sendSms(mobile, code, 30);
 
         log.info("IP ==> " + userIp + "，手机号 ==> " + mobile + "，验证码 ==> " + code);
 
