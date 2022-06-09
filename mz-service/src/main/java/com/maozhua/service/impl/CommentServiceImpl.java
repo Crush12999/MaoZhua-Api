@@ -12,6 +12,7 @@ import com.maozhua.vo.CommentVO;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -87,6 +88,27 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
         List<CommentVO> comments = commentMapperCustom.listVlogComments(map);
 
         return setterPagedGrid(comments, page);
+    }
+
+    /**
+     * 删除评论
+     *
+     * @param commentUserId 这条评论的用户ID
+     * @param commentId     这条评论的ID
+     * @param vlogId        评论所属视频ID
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void removeComment(String commentUserId, String commentId, String vlogId) {
+        Comment pendingComment = new Comment();
+        pendingComment.setId(commentId);
+        pendingComment.setCommentUserId(commentUserId);
+        commentMapper.delete(pendingComment);
+
+        if (!ZERO.equals(redisOperator.get(REDIS_VLOG_COMMENT_COUNTS + ":" + vlogId))) {
+            redisOperator.decrement(REDIS_VLOG_COMMENT_COUNTS + ":" + vlogId, 1);
+        }
+
     }
 
 }

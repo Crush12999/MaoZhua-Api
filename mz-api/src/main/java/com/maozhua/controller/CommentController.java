@@ -52,4 +52,13 @@ public class CommentController extends BaseInfoProperties {
 
         return GraceJsonResult.ok(commentService.listVlogComments(vlogId, page, pageSize));
     }
+
+    @ApiOperation(value = "删除视频评论")
+    @DeleteMapping("delete")
+    public GraceJsonResult removeComment(@RequestParam String commentUserId,
+                                         @RequestParam String commentId,
+                                         @RequestParam String vlogId) {
+        commentService.removeComment(commentUserId, commentId, vlogId);
+        return GraceJsonResult.ok();
+    }
 }
