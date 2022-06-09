@@ -50,7 +50,7 @@ public class CommentController extends BaseInfoProperties {
                                         @RequestParam(defaultValue = "1") Integer page,
                                         @RequestParam(defaultValue = "10") Integer pageSize) {
 
-        return GraceJsonResult.ok(commentService.listVlogComments(vlogId, page, pageSize));
+        return GraceJsonResult.ok(commentService.listVlogComments(vlogId, userId, page, pageSize));
     }
 
     @ApiOperation(value = "删除视频评论")
@@ -59,6 +59,27 @@ public class CommentController extends BaseInfoProperties {
                                          @RequestParam String commentId,
                                          @RequestParam String vlogId) {
         commentService.removeComment(commentUserId, commentId, vlogId);
+        return GraceJsonResult.ok();
+    }
+
+    @ApiOperation(value = "点赞视频评论")
+    @PostMapping("like")
+    public GraceJsonResult likeComment(@RequestParam String userId,
+                                       @RequestParam String commentId) {
+        // FIXME： BigKey，优化点--可以再把commentId做哈希，分片路由存取
+        redisOperator.incrementHash(REDIS_VLOG_COMMENT_LIKED_COUNTS, commentId, 1);
+        // redisOperator.increment(REDIS_VLOG_COMMENT_LIKED_COUNTS + ":" + commentId, 1);
+
+        redisOperator.setHashValue(REDIS_USER_LIKE_COMMENT, userId + ":" + commentId, "1");
+        return GraceJsonResult.ok();
+    }
+
+    @ApiOperation(value = "取消点赞视频评论")
+    @PostMapping("unlike")
+    public GraceJsonResult unlikeComment(@RequestParam String userId,
+                                         @RequestParam String commentId) {
+        redisOperator.decrementHash(REDIS_VLOG_COMMENT_LIKED_COUNTS, commentId, 1);
+        redisOperator.hDel(REDIS_USER_LIKE_COMMENT, userId + ":" + commentId);
         return GraceJsonResult.ok();
     }
 }

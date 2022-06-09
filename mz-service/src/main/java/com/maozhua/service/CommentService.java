@@ -23,18 +23,19 @@ public interface CommentService {
      * 查询评论列表
      *
      * @param vlogId   视频ID
+     * @param userId   用户ID
      * @param page     第几页
      * @param pageSize 每页显示多少条
      * @return 评论列表
      */
-    PagedGridResult listVlogComments(String vlogId, Integer page, Integer pageSize);
+    PagedGridResult listVlogComments(String vlogId, String userId, Integer page, Integer pageSize);
 
     /**
      * 删除评论
      *
      * @param commentUserId 这条评论的用户ID
-     * @param commentId 这条评论的ID
-     * @param vlogId 评论所属视频ID
+     * @param commentId     这条评论的ID
+     * @param vlogId        评论所属视频ID
      */
     void removeComment(String commentUserId, String commentId, String vlogId);
 

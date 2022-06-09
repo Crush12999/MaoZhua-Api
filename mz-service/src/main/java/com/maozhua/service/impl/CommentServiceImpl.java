@@ -3,12 +3,14 @@ package com.maozhua.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.bo.CommentBO;
+import com.maozhua.enums.YesOrNo;
 import com.maozhua.mapper.CommentMapper;
 import com.maozhua.mapper.CommentMapperCustom;
 import com.maozhua.pojo.Comment;
 import com.maozhua.service.CommentService;
 import com.maozhua.utils.PagedGridResult;
 import com.maozhua.vo.CommentVO;
+import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -74,18 +76,29 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
      * 查询评论列表
      *
      * @param vlogId   视频ID
+     * @param userId   用户ID
      * @param page     第几页
      * @param pageSize 每页显示多少条
      * @return 评论列表
      */
     @Override
-    public PagedGridResult listVlogComments(String vlogId, Integer page, Integer pageSize) {
+    public PagedGridResult listVlogComments(String vlogId, String userId, Integer page, Integer pageSize) {
         Map<String, Object> map = new HashMap<>();
         map.put("vlogId", vlogId);
 
         PageHelper.startPage(page, pageSize);
 
         List<CommentVO> comments = commentMapperCustom.listVlogComments(map);
+        comments.forEach(item -> {
+            String isLike = redisOperator.getHashValue(REDIS_USER_LIKE_COMMENT, userId + ":" + item.getCommentId());
+            String likeCounts = redisOperator.getHashValue(REDIS_VLOG_COMMENT_LIKED_COUNTS, item.getCommentId());
+            if (StringUtils.isNotBlank(isLike) && ONE.equals(isLike)) {
+                item.setIsLike(YesOrNo.YES.type);
+            }
+            if (StringUtils.isNotBlank(likeCounts)) {
+                item.setLikeCounts(Integer.parseInt(likeCounts));
+            }
+        });
 
         return setterPagedGrid(comments, page);
     }
