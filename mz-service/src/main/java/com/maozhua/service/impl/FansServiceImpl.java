@@ -2,11 +2,13 @@ package com.maozhua.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.maozhua.base.BaseInfoProperties;
+import com.maozhua.enums.MessageEnum;
 import com.maozhua.enums.YesOrNo;
 import com.maozhua.mapper.FansMapper;
 import com.maozhua.mapper.FansMapperCustom;
 import com.maozhua.pojo.Fans;
 import com.maozhua.service.FansService;
+import com.maozhua.service.MessageService;
 import com.maozhua.utils.PagedGridResult;
 import com.maozhua.vo.FansVO;
 import com.maozhua.vo.VlogerVO;
@@ -34,6 +36,9 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
 
     @Resource
     private FansMapperCustom fansMapperCustom;
+
+    @Resource
+    private MessageService messageService;
 
     @Resource
     private Sid sid;
@@ -72,6 +77,8 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         // 我和博主的关联关系，依赖Redis，不要存储数据库
         redisOperator.set(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId, ONE);
 
+        // 系统消息：关注
+        messageService.createMsg(myId, vlogerId, MessageEnum.FOLLOW_YOU.type, null);
     }
 
     /**

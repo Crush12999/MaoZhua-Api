@@ -4,6 +4,10 @@ package com.maozhua.enums;
  * @Desc: 消息类型
  */
 public enum MessageEnum {
+
+    /**
+     * 关注
+     */
     FOLLOW_YOU(1, "关注"),
     LIKE_VLOG(2, "点赞视频"),
     COMMENT_VLOG(3, "评论视频"),

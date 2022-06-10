@@ -18,6 +18,12 @@ spring:
       max-lifetime: 18000000                # 连接池的最大生命时长（毫秒），超时则会被释放（retired）
       connection-test-query: SELECT 1
 
+  # mongodb
+  data:
+    mongodb:
+      uri: mongodb://root:123456@192.168.131.62:27017
+      database: maozhua
+
   # Redis
   redis:
     host: 192.168.131.62
