@@ -74,7 +74,7 @@ public class MessageMO {
      */
     @ApiModelProperty(value = "消息具体内容")
     @Field("msgContent")
-    private Map msgContent;
+    private Map<?, ?> msgContent;
 
     /**
      * 消息创建时间

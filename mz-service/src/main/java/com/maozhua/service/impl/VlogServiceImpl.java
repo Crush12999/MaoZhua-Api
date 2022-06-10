@@ -3,6 +3,7 @@ package com.maozhua.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.bo.VlogBO;
+import com.maozhua.enums.MessageEnum;
 import com.maozhua.enums.YesOrNo;
 import com.maozhua.mapper.MyLikedVlogMapper;
 import com.maozhua.mapper.VlogMapper;
@@ -10,6 +11,7 @@ import com.maozhua.mapper.VlogMapperCustom;
 import com.maozhua.pojo.MyLikedVlog;
 import com.maozhua.pojo.Vlog;
 import com.maozhua.service.FansService;
+import com.maozhua.service.MessageService;
 import com.maozhua.service.VlogService;
 import com.maozhua.utils.PagedGridResult;
 import com.maozhua.vo.IndexVlogVO;
@@ -45,6 +47,9 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
     @Resource
     private FansService fansService;
+
+    @Resource
+    private MessageService messageService;
 
     @Resource
     private Sid sid;
@@ -202,6 +207,17 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
 
         // 我点赞的视频需要再Redis中保存关联关系
         redisOperator.set(REDIS_USER_LIKE_VLOG + ":" + userId + ":" + vlogId, ONE);
+
+        // 系统消息：点赞短视频
+        Vlog vlog = this.getVlogById(vlogId);
+        Map<String, Object> msgContent = new HashMap<>();
+        msgContent.put("vlogId", vlogId);
+        msgContent.put("vlogCover", vlog.getCover());
+        messageService.createMsg(userId, vlog.getVlogerId(), MessageEnum.LIKE_VLOG.type, msgContent);
+    }
+
+    private Vlog getVlogById(String vlogId) {
+        return vlogMapper.selectByPrimaryKey(vlogId);
     }
 
     /**
