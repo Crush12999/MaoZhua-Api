@@ -2,8 +2,13 @@ package com.maozhua.controller;
 
 import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.bo.CommentBO;
+import com.maozhua.enums.MessageEnum;
 import com.maozhua.grace.result.GraceJsonResult;
+import com.maozhua.pojo.Comment;
+import com.maozhua.pojo.Vlog;
 import com.maozhua.service.CommentService;
+import com.maozhua.service.MessageService;
+import com.maozhua.service.VlogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author sryzzz
@@ -26,6 +33,12 @@ public class CommentController extends BaseInfoProperties {
 
     @Resource
     private CommentService commentService;
+
+    @Resource
+    private MessageService messageService;
+
+    @Resource
+    private VlogService vlogService;
 
     @ApiOperation(value = "发表评论")
     @PostMapping("create")
@@ -71,6 +84,18 @@ public class CommentController extends BaseInfoProperties {
         // redisOperator.increment(REDIS_VLOG_COMMENT_LIKED_COUNTS + ":" + commentId, 1);
 
         redisOperator.setHashValue(REDIS_USER_LIKE_COMMENT, userId + ":" + commentId, "1");
+
+        // 点赞评论
+        Comment comment = commentService.getCommentById(commentId);
+        Vlog vlog = vlogService.getVlogById(comment.getVlogId());
+        Map<String, Object> msgContent = new HashMap<>();
+        msgContent.put("commentId", commentId);
+        msgContent.put("vlogId", vlog.getId());
+        msgContent.put("vlogCover", vlog.getCover());
+
+        messageService.createMsg(userId,
+                comment.getCommentUserId(), MessageEnum.LIKE_COMMENT.type, msgContent);
+
         return GraceJsonResult.ok();
     }
 

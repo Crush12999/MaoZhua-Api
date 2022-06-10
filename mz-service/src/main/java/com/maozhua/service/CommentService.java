@@ -1,6 +1,7 @@
 package com.maozhua.service;
 
 import com.maozhua.bo.CommentBO;
+import com.maozhua.pojo.Comment;
 import com.maozhua.utils.PagedGridResult;
 import com.maozhua.vo.CommentVO;
 
@@ -38,5 +39,13 @@ public interface CommentService {
      * @param vlogId        评论所属视频ID
      */
     void removeComment(String commentUserId, String commentId, String vlogId);
+
+    /**
+     * 通过评论ID获取评论信息
+     *
+     * @param commentId 评论ID
+     * @return 评论信息
+     */
+    Comment getCommentById(String commentId);
 
 }

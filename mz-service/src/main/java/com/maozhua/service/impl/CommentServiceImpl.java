@@ -151,4 +151,15 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
 
     }
 
+    /**
+     * 通过评论ID获取评论信息
+     *
+     * @param commentId 评论ID
+     * @return 评论信息
+     */
+    @Override
+    public Comment getCommentById(String commentId) {
+        return commentMapper.selectByPrimaryKey(commentId);
+    }
+
 }
