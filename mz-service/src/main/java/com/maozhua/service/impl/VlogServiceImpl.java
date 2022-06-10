@@ -216,7 +216,14 @@ public class VlogServiceImpl extends BaseInfoProperties implements VlogService {
         messageService.createMsg(userId, vlog.getVlogerId(), MessageEnum.LIKE_VLOG.type, msgContent);
     }
 
-    private Vlog getVlogById(String vlogId) {
+    /**
+     * 根据视频ID获取视频信息
+     *
+     * @param vlogId 视频ID
+     * @return 视频信息
+     */
+    @Override
+    public Vlog getVlogById(String vlogId) {
         return vlogMapper.selectByPrimaryKey(vlogId);
     }
 

@@ -3,11 +3,15 @@ package com.maozhua.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.maozhua.base.BaseInfoProperties;
 import com.maozhua.bo.CommentBO;
+import com.maozhua.enums.MessageEnum;
 import com.maozhua.enums.YesOrNo;
 import com.maozhua.mapper.CommentMapper;
 import com.maozhua.mapper.CommentMapperCustom;
 import com.maozhua.pojo.Comment;
+import com.maozhua.pojo.Vlog;
 import com.maozhua.service.CommentService;
+import com.maozhua.service.MessageService;
+import com.maozhua.service.VlogService;
 import com.maozhua.utils.PagedGridResult;
 import com.maozhua.vo.CommentVO;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +39,12 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
 
     @Resource
     private CommentMapperCustom commentMapperCustom;
+
+    @Resource
+    private MessageService messageService;
+
+    @Resource
+    private VlogService vlogService;
 
     @Resource
     private Sid sid;
@@ -68,6 +78,23 @@ public class CommentServiceImpl extends BaseInfoProperties implements CommentSer
 
         CommentVO commentVO = new CommentVO();
         BeanUtils.copyProperties(comment, commentVO);
+
+        // 系统消息：评论/回复
+        Vlog vlog = vlogService.getVlogById(commentBO.getVlogId());
+        Map<String, Object> msgContent = new HashMap<>();
+        msgContent.put("commentId", commentId);
+        msgContent.put("commentContent", commentBO.getContent());
+        msgContent.put("vlogId", vlog.getId());
+        msgContent.put("vlogCover", vlog.getCover());
+
+
+        Integer type = MessageEnum.COMMENT_VLOG.type;
+        if (StringUtils.isNotBlank(commentBO.getFatherCommentId()) &&
+                !commentBO.getFatherCommentId().equalsIgnoreCase(ZERO)) {
+            type = MessageEnum.REPLY_YOU.type;
+        }
+        messageService.createMsg(commentBO.getCommentUserId(),
+                commentBO.getVlogerId(), type, msgContent);
 
         return commentVO;
     }

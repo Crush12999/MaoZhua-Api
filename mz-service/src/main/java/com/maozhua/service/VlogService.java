@@ -1,6 +1,7 @@
 package com.maozhua.service;
 
 import com.maozhua.bo.VlogBO;
+import com.maozhua.pojo.Vlog;
 import com.maozhua.utils.PagedGridResult;
 import com.maozhua.vo.IndexVlogVO;
 
@@ -113,5 +114,13 @@ public interface VlogService {
      * @return 朋友（互关）发布的视频列表
      */
     PagedGridResult listMyFriendVlogs(String myId, Integer page, Integer pageSize);
+
+    /**
+     * 根据视频ID获取视频信息
+     *
+     * @param vlogId 视频ID
+     * @return 视频信息
+     */
+    Vlog getVlogById(String vlogId);
 
 }
