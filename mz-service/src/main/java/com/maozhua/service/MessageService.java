@@ -1,5 +1,8 @@
 package com.maozhua.service;
 
+import com.maozhua.mo.MessageMO;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,4 +22,13 @@ public interface MessageService {
      */
     void createMsg(String fromUserId, String toUserId, Integer msgType, Map msgContent);
 
+    /**
+     * 分页查询消息列表
+     *
+     * @param toUserId 接收方
+     * @param page     当前页
+     * @param pageSize 每页显示条数
+     * @return 消息列表
+     */
+    List<MessageMO> queryList(String toUserId, Integer page, Integer pageSize);
 }

@@ -21,6 +21,7 @@ public class BaseInfoProperties {
      * 开始分页的页码数
      */
     public static final Integer COMMON_START_PAGE = 1;
+    public static final Integer COMMON_START_PAGE_ZERO = 0;
 
     /**
      * 每页显示 10 条
