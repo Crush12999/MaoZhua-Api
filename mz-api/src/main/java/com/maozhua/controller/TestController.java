@@ -32,4 +32,10 @@ public class TestController {
         rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_MSG, "sys.msg.send", "我发了一个消息~");
         return GraceJsonResult.ok();
     }
+
+    @GetMapping("produce2")
+    public GraceJsonResult produce2() {
+        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_MSG, "sys.msg.delete", "我删除了一个消息~");
+        return GraceJsonResult.ok();
+    }
 }
