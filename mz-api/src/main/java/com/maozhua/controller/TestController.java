@@ -1,6 +1,6 @@
 package com.maozhua.controller;
 
-import com.maozhua.config.RabbitMqConfig;
+import com.maozhua.base.RabbitMqConfig;
 import com.maozhua.grace.result.GraceJsonResult;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;

@@ -2,18 +2,22 @@ package com.maozhua.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.maozhua.base.BaseInfoProperties;
+import com.maozhua.base.RabbitMqConfig;
 import com.maozhua.enums.MessageEnum;
 import com.maozhua.enums.YesOrNo;
 import com.maozhua.mapper.FansMapper;
 import com.maozhua.mapper.FansMapperCustom;
+import com.maozhua.mo.MessageMO;
 import com.maozhua.pojo.Fans;
 import com.maozhua.service.FansService;
 import com.maozhua.service.MessageService;
+import com.maozhua.utils.JsonUtils;
 import com.maozhua.utils.PagedGridResult;
 import com.maozhua.vo.FansVO;
 import com.maozhua.vo.VlogerVO;
 import org.apache.commons.lang3.StringUtils;
 import org.n3r.idworker.Sid;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -22,6 +26,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author sryzzz
@@ -42,6 +47,9 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
 
     @Resource
     private Sid sid;
+
+    @Resource
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 关注
@@ -78,7 +86,17 @@ public class FansServiceImpl extends BaseInfoProperties implements FansService {
         redisOperator.set(REDIS_FANS_AND_VLOGGER_RELATIONSHIP + ":" + myId + ":" + vlogerId, ONE);
 
         // 系统消息：关注
-        messageService.createMsg(myId, vlogerId, MessageEnum.FOLLOW_YOU.type, null);
+        // messageService.createMsg(myId, vlogerId, MessageEnum.FOLLOW_YOU.type, null);
+
+        MessageMO messageMO = new MessageMO();
+        messageMO.setFromUserId(myId);
+        messageMO.setToUserId(vlogerId);
+
+        // 优化：mq异步解耦
+        rabbitTemplate.convertAndSend(
+                RabbitMqConfig.EXCHANGE_MSG,
+                "sys.msg." + MessageEnum.FOLLOW_YOU.enValue,
+                Objects.requireNonNull(JsonUtils.objectToJson(messageMO)));
     }
 
     /**

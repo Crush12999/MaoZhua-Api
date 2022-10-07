@@ -1,4 +1,4 @@
-package com.maozhua.config;
+package com.maozhua.base;
 
 import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Qualifier;
