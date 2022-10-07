@@ -37,6 +37,12 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!-- RabbitMQ 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
         <!-- lombok工具 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -101,12 +107,6 @@
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-springdoc-ui</artifactId>
-        </dependency>
-
-        <!-- MinIO -->
-        <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
         </dependency>
 
     </dependencies>

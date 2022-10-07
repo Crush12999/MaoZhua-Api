@@ -21,20 +21,28 @@ spring:
   # mongodb
   data:
     mongodb:
-      uri: mongodb://root:123456@192.168.131.62:27017
+      uri: mongodb://root:123456@192.168.31.224:27019
       database: maozhua
 
   # Redis
   redis:
-    host: 192.168.131.62
+    host: 192.168.31.224
     port: 6379
     database: 0
     password: 123456
 
+  # rabbitmq
+  rabbitmq:
+    host: 192.168.31.224
+    port: 5672
+    username: root
+    password: 123456
+    virtual-host: maozhua
+
 # MinIO 配置
 minio:
-  endpoint: http://192.168.131.62:9000  # MinIO 服务地址
-  fileHost: http://192.168.131.62:9000  # 文件地址
+  endpoint: http://192.168.31.224:9000  # MinIO 服务地址
+  fileHost: http://192.168.31.224:9000  # 文件地址
   bucketName: maozhua                   # 存储桶名称
   accessKey: root                       # 用户名
   secretKey: 12345678                   # 密码
